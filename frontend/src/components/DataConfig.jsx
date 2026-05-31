@@ -41,7 +41,7 @@ export default function DataConfig({ datasetInfo, setPreprocessingInfo, onNext }
     formData.append('config', JSON.stringify(config));
 
     try {
-      const res = await axios.post('http://127.0.0.1:8000/preprocess', formData);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/preprocess`, formData);
       setPreprocessingInfo(res.data);
       onNext();
     } catch (err) {

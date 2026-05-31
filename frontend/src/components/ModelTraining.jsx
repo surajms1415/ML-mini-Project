@@ -21,7 +21,7 @@ export default function ModelTraining({ preprocessingInfo, setModelResults, onNe
     setError('');
     
     try {
-      const res = await axios.post('http://127.0.0.1:8000/train');
+      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/train`);
       setModelResults(res.data);
       setTrained(true);
     } catch (err) {
