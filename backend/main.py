@@ -52,18 +52,22 @@ async def upload_file(file: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/use_demo")
-async def use_demo():
+async def use_demo(dataset_name: str = Form(default="Potato.csv")):
     try:
-        if not os.path.exists("dummy.csv"):
-            raise HTTPException(status_code=400, detail="Demo dataset not found")
+        # Path to the dummy folder which is one level up
+        folder_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "dummy")
+        file_path = os.path.join(folder_path, dataset_name)
         
-        df = pd.read_csv("dummy.csv")
+        if not os.path.exists(file_path):
+            raise HTTPException(status_code=400, detail=f"Demo dataset {dataset_name} not found in dummy folder")
+        
+        df = pd.read_csv(file_path)
         columns = df.columns.tolist()
         dataset_cache['data'] = df
         
         return {
             "status": "success",
-            "filename": "dummy.csv (Demo Dataset)",
+            "filename": f"{dataset_name} (Demo Dataset)",
             "columns": columns,
             "preview": df.head(5).to_dict(orient='records'),
             "total_rows": len(df)
