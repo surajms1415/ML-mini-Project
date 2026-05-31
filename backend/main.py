@@ -51,6 +51,26 @@ async def upload_file(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+@app.post("/use_demo")
+async def use_demo():
+    try:
+        if not os.path.exists("dummy.csv"):
+            raise HTTPException(status_code=400, detail="Demo dataset not found")
+        
+        df = pd.read_csv("dummy.csv")
+        columns = df.columns.tolist()
+        dataset_cache['data'] = df
+        
+        return {
+            "status": "success",
+            "filename": "dummy.csv (Demo Dataset)",
+            "columns": columns,
+            "preview": df.head(5).to_dict(orient='records'),
+            "total_rows": len(df)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
 @app.post("/preprocess")
 async def preprocess(config: str = Form(...)):
     # config is a json string containing target_col, feature_cols, date_col

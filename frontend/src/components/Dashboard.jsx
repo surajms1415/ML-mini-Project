@@ -1,6 +1,6 @@
 import { Database, TrendingUp, DollarSign, Award, Layers } from 'lucide-react';
 
-export default function Dashboard({ datasetInfo, modelResults }) {
+export default function Dashboard({ datasetInfo, modelResults, setActiveTab }) {
   const isDataLoaded = !!datasetInfo;
   
   return (
@@ -72,13 +72,44 @@ export default function Dashboard({ datasetInfo, modelResults }) {
         </div>
       </div>
 
-      <div className="glass-card p-8 min-h-[300px] flex flex-col items-center justify-center text-center">
+      <div className="glass-card p-8 min-h-[400px] flex flex-col items-center justify-center text-center">
         {!isDataLoaded ? (
-          <>
-            <Database className="text-gray-300 dark:text-gray-600 mb-4" size={64} />
-            <h3 className="text-xl font-medium text-gray-700 dark:text-gray-300 mb-2">No Data Available</h3>
-            <p className="text-gray-500 max-w-md">Please upload the India Commodity Wise Mandi Dataset to begin the analysis and modeling process.</p>
-          </>
+          <div className="max-w-2xl w-full">
+            <h3 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">Welcome to Potato Mandi Analytics</h3>
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
+              A comprehensive machine learning platform designed to predict and analyze potato arrivals across Indian mandis.
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left mb-10">
+              <div className="bg-white/50 dark:bg-dark-card/50 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+                <Database className="text-blue-500 mb-2" size={24} />
+                <h4 className="font-semibold text-gray-800 dark:text-gray-200">Data Preprocessing</h4>
+                <p className="text-sm text-gray-500 mt-1">Automatic feature extraction, missing value handling, and time-series lagging.</p>
+              </div>
+              <div className="bg-white/50 dark:bg-dark-card/50 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+                <Layers className="text-green-500 mb-2" size={24} />
+                <h4 className="font-semibold text-gray-800 dark:text-gray-200">Multiple ML Models</h4>
+                <p className="text-sm text-gray-500 mt-1">Train Random Forest, SVR, and Linear Regression simultaneously.</p>
+              </div>
+              <div className="bg-white/50 dark:bg-dark-card/50 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+                <Award className="text-purple-500 mb-2" size={24} />
+                <h4 className="font-semibold text-gray-800 dark:text-gray-200">Model Evaluation</h4>
+                <p className="text-sm text-gray-500 mt-1">Compare models using RMSE, MAE, and R² scores to pick the best fit.</p>
+              </div>
+              <div className="bg-white/50 dark:bg-dark-card/50 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
+                <TrendingUp className="text-orange-500 mb-2" size={24} />
+                <h4 className="font-semibold text-gray-800 dark:text-gray-200">Live Predictions</h4>
+                <p className="text-sm text-gray-500 mt-1">Make new predictions instantly using the best-performing trained model.</p>
+              </div>
+            </div>
+
+            <button 
+              onClick={() => setActiveTab && setActiveTab('upload')}
+              className="bg-agri-600 hover:bg-agri-700 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl shadow-agri-500/30 transition-all hover:-translate-y-1 w-full md:w-auto"
+            >
+              Get Started (Upload or Demo Data)
+            </button>
+          </div>
         ) : !modelResults ? (
           <>
             <TrendingUp className="text-agri-300 dark:text-agri-600 mb-4" size={64} />

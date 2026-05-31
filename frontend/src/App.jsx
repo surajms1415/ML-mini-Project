@@ -25,7 +25,7 @@ export default function App() {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <Dashboard datasetInfo={datasetInfo} modelResults={modelResults} />;
+        return <Dashboard datasetInfo={datasetInfo} modelResults={modelResults} setActiveTab={setActiveTab} />;
       case 'upload':
         return <UploadDataset setDatasetInfo={setDatasetInfo} onNext={() => setActiveTab('config')} />;
       case 'config':
@@ -35,7 +35,7 @@ export default function App() {
       case 'predictions':
         return <Predictions modelResults={modelResults} />;
       default:
-        return <Dashboard datasetInfo={datasetInfo} modelResults={modelResults} />;
+        return <Dashboard datasetInfo={datasetInfo} modelResults={modelResults} setActiveTab={setActiveTab} />;
     }
   };
 
