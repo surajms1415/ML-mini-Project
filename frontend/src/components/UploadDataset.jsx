@@ -36,8 +36,9 @@ export default function UploadDataset({ setDatasetInfo, onNext }) {
       setSuccess(true);
     } catch (err) {
       console.error("Upload error:", err);
+      const apiUrl = getApiUrl();
       const errorMsg = err.response?.data?.detail || err.message || 'Upload failed. Ensure backend is running.';
-      setError(typeof errorMsg === 'string' ? errorMsg : JSON.stringify(errorMsg));
+      setError(`Failed to connect to ${apiUrl}/upload. Error: ${typeof errorMsg === 'string' ? errorMsg : JSON.stringify(errorMsg)}`);
     } finally {
       setIsUploading(false);
     }
