@@ -71,16 +71,21 @@ export default function Predictions({ modelResults }) {
     setPredictInputs(prev => ({ ...prev, [feature]: value }));
   };
 
+  const getApiUrl = () => {
+    const url = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+    return url.replace(/\/+$/, '');
+  };
+
   const handlePredictSingle = async () => {
     setIsPredicting(true);
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/predict_single`, {
+      const res = await axios.post(`${getApiUrl()}/predict_single`, {
         model_name: selectedModelForPrediction,
         features: predictInputs
       });
       setSinglePredictionResult(res.data.prediction);
     } catch (err) {
-      console.error(err);
+      console.error("Predict error:", err);
       alert('Prediction failed. Ensure all inputs are valid numbers.');
     } finally {
       setIsPredicting(false);

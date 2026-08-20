@@ -16,6 +16,11 @@ export default function UploadDataset({ setDatasetInfo, onNext }) {
     }
   };
 
+  const getApiUrl = () => {
+    const url = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+    return url.replace(/\/+$/, '');
+  };
+
   const handleUpload = async () => {
     if (!file) return;
     setIsUploading(true);
@@ -25,13 +30,14 @@ export default function UploadDataset({ setDatasetInfo, onNext }) {
     formData.append('file', file);
     
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/upload`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      // Let axios set the Content-Type with the proper boundary automatically
+      const res = await axios.post(`${getApiUrl()}/upload`, formData);
       setDatasetInfo(res.data);
       setSuccess(true);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Upload failed. Ensure backend is running.');
+      console.error("Upload error:", err);
+      const errorMsg = err.response?.data?.detail || err.message || 'Upload failed. Ensure backend is running.';
+      setError(typeof errorMsg === 'string' ? errorMsg : JSON.stringify(errorMsg));
     } finally {
       setIsUploading(false);
     }
@@ -42,11 +48,13 @@ export default function UploadDataset({ setDatasetInfo, onNext }) {
     setError('');
     
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/use_demo`);
+      const res = await axios.post(`${getApiUrl()}/use_demo`);
       setDatasetInfo(res.data);
       setSuccess(true);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Failed to load demo dataset. Ensure backend is running.');
+      console.error("Demo error:", err);
+      const errorMsg = err.response?.data?.detail || err.message || 'Failed to load demo dataset. Ensure backend is running.';
+      setError(typeof errorMsg === 'string' ? errorMsg : JSON.stringify(errorMsg));
     } finally {
       setIsUploading(false);
     }

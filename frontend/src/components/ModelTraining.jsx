@@ -20,12 +20,19 @@ export default function ModelTraining({ preprocessingInfo, setModelResults, onNe
     setIsTraining(true);
     setError('');
     
+    const getApiUrl = () => {
+      const url = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+      return url.replace(/\/+$/, '');
+    };
+
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/train`);
+      const res = await axios.post(`${getApiUrl()}/train`);
       setModelResults(res.data);
       setTrained(true);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Training failed');
+      console.error("Train error:", err);
+      const errorMsg = err.response?.data?.detail || err.message || 'Training failed';
+      setError(typeof errorMsg === 'string' ? errorMsg : JSON.stringify(errorMsg));
     } finally {
       setIsTraining(false);
     }

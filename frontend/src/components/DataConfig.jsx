@@ -40,12 +40,19 @@ export default function DataConfig({ datasetInfo, setPreprocessingInfo, onNext }
     const formData = new FormData();
     formData.append('config', JSON.stringify(config));
 
+    const getApiUrl = () => {
+      const url = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+      return url.replace(/\/+$/, '');
+    };
+
     try {
-      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000'}/preprocess`, formData);
+      const res = await axios.post(`${getApiUrl()}/preprocess`, formData);
       setPreprocessingInfo(res.data);
       onNext();
     } catch (err) {
-      setError(err.response?.data?.detail || 'Preprocessing failed');
+      console.error("Preprocess error:", err);
+      const errorMsg = err.response?.data?.detail || err.message || 'Preprocessing failed';
+      setError(typeof errorMsg === 'string' ? errorMsg : JSON.stringify(errorMsg));
     } finally {
       setIsProcessing(false);
     }
